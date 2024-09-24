@@ -1,6 +1,6 @@
 # Mental-Care-AI
 <p align="center">
-  <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.medicalnewstoday.com%2Fmental-health&psig=AOvVaw0zRtqUkFr-Bwps0GaVcQ-v&ust=1727298306384000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOD86-a93IgDFQAAAAAdAAAAABAE" alt="">
+  <img src="https://media.post.rvohealth.io/wp-content/uploads/sites/3/2021/03/609849-mental-health-hub-1200x628-facebook.jpg" alt="">
 </p>
 
 ## Mental Health Support System using RAG and LlamaIndex
