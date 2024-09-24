@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://github.com/NguyenDinhTiem/AIO-MENTAL-HEALTH/blob/09100bbbff16a633912288ff3c4c031e9f7dac8b/data/images/logo.png" alt="">
+</p>
 # Mental-Care-AI
 ## Mental Health Support System using RAG and LlamaIndex
 
