@@ -1,12 +1,49 @@
 # Mental-Care-AI
-<p align="center">
-  <img src="https://media.post.rvohealth.io/wp-content/uploads/sites/3/2021/03/609849-mental-health-hub-1200x628-facebook.jpg" alt="">
-</p>
+
+![Mental Health Hub](https://media.post.rvohealth.io/wp-content/uploads/sites/3/2021/03/609849-mental-health-hub-1200x628-facebook.jpg)
 
 ## Mental Health Support System using RAG and LlamaIndex
 
 ## Project Overview
 This project is currently in the **brainstorming** and **early concept** phase. Our goal is to explore the possibility of creating a smart mental health support system utilizing Retrieval-Augmented Generation (RAG) and LlamaIndex. The system aims to provide virtual counseling services, assist in mental health diagnostics based on DSM-5, and track users' mental health progress over time.
+
+## Getting Started
+
+### 1. Create and Activate a Conda Environment
+
+To get started with this project, you'll need to create a new Conda environment with Python 3.11 and activate it:
+
+```sh
+conda create -n aio_env python=3.11
+conda activate aio_env
+```
+
+### 2. Set Up OpenAI API Key
+
+Create a `.streamlit` folder in the root of your project, and add a `secrets.toml` file with your OpenAI API key as follows:
+
+```toml
+[openai]
+OPENAI_API_KEY = "sk-your-api-key"
+```
+
+Make sure to replace `"sk-your-api-key"` with your actual OpenAI API key.
+
+### 3. Install Required Libraries
+
+To install all necessary dependencies for the project, use the following command:
+
+```sh
+pip install -r requirements.txt
+```
+
+### 4. Run the Application
+
+You can run the Streamlit application using the following command:
+
+```sh
+streamlit run Home.py
+```
 
 ## Current Focus
 At this stage, the focus is on defining the problem and outlining the methodology. The project is not fully developed yet, and most ideas are still under discussion and refinement.
@@ -31,3 +68,4 @@ Since this is an ongoing brainstorming project, we welcome any contributions, fe
 
 ## License
 To be determined as the project evolves.
+
