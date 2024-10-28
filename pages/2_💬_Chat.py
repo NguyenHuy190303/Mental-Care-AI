@@ -16,7 +16,7 @@ def main():
     if st.session_state.logged_in:
         username = st.session_state.username
         user_info = st.session_state.user_info
-        st.header("💬 AIO MENTAL HEALTH")
+        st.header("💬 MENTAL CARE AI")
         chat_store = load_chat_store()
         container = st.container()
         agent = initialize_chatbot(chat_store, container, username, user_info)
