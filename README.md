@@ -12,8 +12,8 @@ This project is in the **brainstorming** and **early concept** phase, exploring 
 ### 1. Create and Activate a Conda Environment
 
 ```sh
-conda create -n aio_env python=3.11
-conda activate aio_env
+conda create -n mental_env python=3.11
+conda activate mental_env
 ```
 
 ### 2. Set Up OpenAI API Key
