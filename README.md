@@ -1,7 +1,3 @@
-Here’s an updated `README.md` file incorporating Docker setup details for the **Mental-Care-AI** project:
-
----
-
 # Mental-Care-AI
 
 ![Mental Health Hub](https://media.post.rvohealth.io/wp-content/uploads/sites/3/2021/03/609849-mental-health-hub-1200x628-facebook.jpg)
