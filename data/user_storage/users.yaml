@@ -1,0 +1,25 @@
+usernames:
+  '123':
+    address: '123'
+    age: 12
+    email: '123'
+    gender: Male
+    id: 4
+    job: '123'
+    name: '123'
+    password: a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+  alicejohnson:
+    email: alice.johnson@example.com
+    id: 3
+    name: Alice Johnson
+    role: user
+  janesmith:
+    email: jane.smith@example.com
+    id: 2
+    name: Jane Smith
+    role: user
+  johndoe:
+    email: john.doe@example.com
+    id: 1
+    name: John Doe
+    role: admin

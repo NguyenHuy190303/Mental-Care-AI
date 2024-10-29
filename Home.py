@@ -25,7 +25,6 @@ def main():
             with guest_tab:
                 guest_login()
     else:
-        
         col1, col2 = st.columns(2)
         with col1:
             st.image("data/images/chat.jpeg")
@@ -36,6 +35,7 @@ def main():
             if st.button("Track Your Health Information"):
                 st.switch_page("pages/1_📈_user.py")
         st.success(f'Welcome {st.session_state.username}, explore the features of this mental health care app!', icon="🎉")
+
 
 if __name__ == "__main__":
     main()
