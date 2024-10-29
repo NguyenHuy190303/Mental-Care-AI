@@ -1,3 +1,7 @@
+Here’s an updated `README.md` file incorporating Docker setup details for the **Mental-Care-AI** project:
+
+---
+
 # Mental-Care-AI
 
 ![Mental Health Hub](https://media.post.rvohealth.io/wp-content/uploads/sites/3/2021/03/609849-mental-health-hub-1200x628-facebook.jpg)
@@ -5,13 +9,11 @@
 ## Mental Health Support System using RAG and LlamaIndex
 
 ## Project Overview
-This project is currently in the **brainstorming** and **early concept** phase. Our goal is to explore the possibility of creating a smart mental health support system utilizing Retrieval-Augmented Generation (RAG) and LlamaIndex. The system aims to provide virtual counseling services, assist in mental health diagnostics based on DSM-5, and track users' mental health progress over time.
+This project is in the **brainstorming** and **early concept** phase, exploring the potential for a smart mental health support system using Retrieval-Augmented Generation (RAG) and LlamaIndex. The system aims to provide virtual counseling, assist in diagnostics based on DSM-5, and track users' mental health progress.
 
 ## Getting Started
 
 ### 1. Create and Activate a Conda Environment
-
-To get started with this project, you'll need to create a new Conda environment with Python 3.11 and activate it:
 
 ```sh
 conda create -n aio_env python=3.11
@@ -20,52 +22,82 @@ conda activate aio_env
 
 ### 2. Set Up OpenAI API Key
 
-Create a `.streamlit` folder in the root of your project, and add a `secrets.toml` file with your OpenAI API key as follows:
+Create a `.streamlit` folder in the root directory, and add a `secrets.toml` file:
 
 ```toml
 [openai]
 OPENAI_API_KEY = "sk-your-api-key"
 ```
 
-Make sure to replace `"sk-your-api-key"` with your actual OpenAI API key.
-
 ### 3. Install Required Libraries
-
-To install all necessary dependencies for the project, use the following command:
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### 4. Run the Application
-
-You can run the Streamlit application using the following command:
+### 4. Run the Application Locally
 
 ```sh
 streamlit run Home.py
 ```
 
+## Docker Setup
+
+### 1. Building the Docker Image
+
+To containerize the application, use:
+
+```sh
+docker build -t mental-care-ai .
+```
+
+### 2. Running the Docker Container
+
+Run the container, mapping port `8501` to access the Streamlit app:
+
+```sh
+docker run -p 8501:8501 mental-care-ai
+```
+
+### 3. Managing Secrets in Docker
+
+To securely pass your OpenAI API key:
+
+- **Option 1:** Use an environment variable when running the container:
+
+  ```sh
+  docker run -p 8501:8501 -e OPENAI_API_KEY="sk-your-api-key" mental-care-ai
+  ```
+
+- **Option 2:** Use a `.env` file:
+
+  ```plaintext
+  # .env file
+  OPENAI_API_KEY=sk-your-api-key
+  ```
+
+  Then run the container with:
+
+  ```sh
+  docker run -p 8501:8501 --env-file .env mental-care-ai
+  ```
+
 ## Current Focus
-At this stage, the focus is on defining the problem and outlining the methodology. The project is not fully developed yet, and most ideas are still under discussion and refinement.
+Defining the problem and outlining the methodology:
 
 1. **Concept and Motivation**
-   - Exploring the need for accessible, affordable mental health support, especially in regions like Vietnam where mental health services are limited.
-   - Investigating how technology, especially language models like LlamaIndex, can be leveraged to build a virtual mental health assistant capable of diagnosing and providing support.
-
-   ![Figure 1: The system of conversation with users (1) (2), analysis and diagnosis (3), progress monitoring Health (4)](https://github.com/NguyenHuy190303/Mental-Care-AI/blob/master/images/2.png)
+   - Addressing the need for accessible mental health support.
+   - Exploring LlamaIndex for a virtual mental health assistant.
 
 2. **Initial Methodology**
-   - Discussing the potential use of LlamaIndex to retrieve mental health-related information from DSM-5 and other reliable sources.
-   - Exploring how agents could be designed to track conversation history, assess mental health conditions, and provide personalized feedback to users.
-
-   ![Figure 2: Curriculum "Standard diagnosis of mental disorders according to DSM-5" and a data sample about Disorders of mood air conditioning.](https://github.com/NguyenHuy190303/Mental-Care-AI/blob/master/images/3.png)
+   - Using LlamaIndex to retrieve DSM-5-related information.
+   - Designing agents to track user conversations and provide feedback.
 
 ## Next Steps
-Since the project is in its infancy, we will continue to refine the ideas and methodologies. No concrete implementations have been developed yet, but future directions include setting up a basic pipeline for mental health diagnostics and experimenting with agent-based systems.
+Refining ideas and developing a pipeline for mental health diagnostics.
 
 ## Contributions and Ideas
-Since this is an ongoing brainstorming project, we welcome any contributions, feedback, or suggestions as we work towards a clearer direction and actionable development plan.
+Since this is an ongoing project, contributions, feedback, and suggestions are welcomed.
 
 ## License
 To be determined as the project evolves.
-
