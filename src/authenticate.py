@@ -127,3 +127,12 @@ if __name__ == '__main__':
                 login()
     else:
         st.write(f"Welcome, {st.session_state.username}!")
+<<<<<<< HEAD
+=======
+        # Add logout button in the sidebar
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.username = None
+            st.session_state.user_info = None
+            st.rerun()
+>>>>>>> feature
