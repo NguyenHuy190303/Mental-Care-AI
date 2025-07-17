@@ -1,0 +1,305 @@
+/* Progress Metrics Chart Styles */
+
+.progress-metrics-chart {
+    padding: 20px 0;
+}
+
+/* Metric Controls */
+.metric-controls {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.metric-selection {
+    margin-bottom: 20px;
+}
+
+.metric-selection h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 15px;
+}
+
+.metric-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.metric-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.metric-checkbox:hover {
+    background: #e5e7eb;
+}
+
+.metric-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.checkbox-content svg {
+    color: #6b7280;
+}
+
+/* Chart Controls */
+.chart-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.control-group select {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 13px;
+    background: white;
+    cursor: pointer;
+}
+
+/* Chart Container */
+.chart-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.chart-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.chart-info svg {
+    color: #9ca3af;
+}
+
+/* Custom Tooltip */
+.chart-tooltip {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+.chart-tooltip p {
+    font-size: 11px;
+    margin: 2px 0;
+    font-weight: 500;
+}
+
+/* No Data State */
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+.no-data svg {
+    color: #9ca3af;
+    margin-bottom: 20px;
+}
+
+.no-data h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+}
+
+/* Trend Indicators */
+.trend-indicators {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.trend-indicators h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 15px;
+}
+
+.trends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.trend-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.trend-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.trend-header svg {
+    color: #6b7280;
+}
+
+.trend-header span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.trend-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.trend-indicator.up {
+    color: #10b981;
+}
+
+.trend-indicator.down {
+    color: #ef4444;
+}
+
+.trend-indicator.stable {
+    color: #6b7280;
+}
+
+.stable-indicator {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* Recharts Customization */
+.recharts-cartesian-axis-tick-value {
+    font-size: 12px;
+    fill: #6b7280;
+}
+
+.recharts-legend-wrapper {
+    padding-top: 10px;
+}
+
+.recharts-legend-item-text {
+    font-size: 12px;
+    color: #374151 !important;
+}
+
+.recharts-tooltip-wrapper {
+    z-index: 1000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .metric-controls {
+        padding: 15px;
+    }
+    
+    .metric-checkboxes {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .control-group {
+        justify-content: space-between;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .trends-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        padding: 15px;
+    }
+    
+    /* Make charts more mobile-friendly */
+    .recharts-wrapper {
+        font-size: 11px;
+    }
+    
+    .recharts-cartesian-axis-tick-value {
+        font-size: 10px;
+    }
+    
+    .recharts-legend-item-text {
+        font-size: 11px !important;
+    }
+}

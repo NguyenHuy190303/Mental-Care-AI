@@ -1,0 +1,651 @@
+/* Provider Overview Styles */
+
+.provider-overview {
+    padding: 20px 0;
+}
+
+/* Provider Header */
+.provider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.header-content h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 5px;
+}
+
+.header-content h2 svg {
+    color: #3b82f6;
+}
+
+.header-content p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+    background: #f3f4f6;
+}
+
+/* Provider Tabs */
+.provider-tabs {
+    display: flex;
+    background: white;
+    border-radius: 6px;
+    padding: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.tab:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.tab.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Provider Content */
+.provider-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Overview Section */
+.provider-overview-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* Clinical Cards */
+.clinical-card {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.card-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.card-header svg {
+    color: #6b7280;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+/* Risk Assessment */
+.risk-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+}
+
+.risk-indicators {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.indicator-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.indicator-item svg {
+    color: #6b7280;
+}
+
+.factors-section {
+    margin-bottom: 15px;
+}
+
+.factors-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.factors-section ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.factors-section li {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+/* Alerts Summary */
+.alert-count {
+    background: #ef4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.no-alerts {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    padding: 20px;
+}
+
+.alerts-list {
+    space-y: 15px;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 3px solid;
+}
+
+.alert-item.low {
+    background: #f0fdf4;
+    border-left-color: #10b981;
+}
+
+.alert-item.medium {
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+}
+
+.alert-item.high {
+    background: #fef2f2;
+    border-left-color: #ef4444;
+}
+
+.alert-item.critical {
+    background: #fef2f2;
+    border-left-color: #dc2626;
+}
+
+.alert-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.alert-content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.alert-content p {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.alert-time {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.acknowledge-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* Treatment Progress */
+.progress-metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #374151;
+}
+
+.metric-item svg {
+    color: #6b7280;
+    margin-right: 6px;
+}
+
+.trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.trend.improving {
+    color: #10b981;
+}
+
+.trend.declining {
+    color: #ef4444;
+}
+
+.treatment-goals h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+}
+
+.goal-item {
+    margin-bottom: 15px;
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.goal-text {
+    font-size: 13px;
+    color: #374151;
+}
+
+.goal-progress {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.progress-bar {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #10b981;
+    transition: width 0.3s ease;
+}
+
+.goal-target {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* Clinical Notes Section */
+.clinical-notes-section {
+    space-y: 20px;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.notes-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.add-note-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Note Form */
+.note-form {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.note-form textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.save-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Notes List */
+.notes-list {
+    space-y: 15px;
+}
+
+.note-item {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.note-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.note-info svg {
+    color: #6b7280;
+}
+
+.note-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.note-type {
+    font-size: 12px;
+    color: #6b7280;
+    background: #e5e7eb;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.note-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.note-content p {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.note-actions {
+    margin-top: 10px;
+}
+
+.edit-note-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 1px solid #d1d5db;
+    color: #6b7280;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Treatment Plan Section */
+.treatment-plan-section {
+    space-y: 20px;
+}
+
+.plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.plan-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.edit-plan-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.plan-content {
+    space-y: 25px;
+}
+
+.plan-goals h4,
+.plan-interventions h4,
+.plan-schedule h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 15px;
+}
+
+.plan-goal {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.goal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.goal-header svg {
+    color: #3b82f6;
+}
+
+.goal-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.plan-interventions ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.plan-interventions li {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+.review-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.review-date svg {
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .provider-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .provider-tabs {
+        flex-direction: column;
+    }
+    
+    .tab {
+        justify-content: flex-start;
+    }
+    
+    .provider-overview-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .notes-header,
+    .plan-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .note-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .note-meta {
+        justify-content: space-between;
+    }
+    
+    .goal-details {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
