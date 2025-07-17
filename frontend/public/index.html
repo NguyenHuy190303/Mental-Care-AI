@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="description" content="Sage Healthcare AI - Professional mental health support system for healthcare environments" />
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Healthcare Compliance -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>Sage Healthcare AI - Mental Health Support</title>
+    
+    <style>
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafb 0%, #e8f4f8 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .loading-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading-subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-disclaimer {
+            position: absolute;
+            bottom: 2rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            max-width: 600px;
+            padding: 0 1rem;
+        }
+        
+        /* Hide loading screen when app loads */
+        .app-loaded #loading-screen {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <noscript>
+        <div style="text-align: center; padding: 2rem; font-family: Arial, sans-serif;">
+            <h1>JavaScript Required</h1>
+            <p>Sage Healthcare AI requires JavaScript to function properly. Please enable JavaScript in your browser and refresh the page.</p>
+            <p>If you need immediate mental health support, please contact:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li><strong>988</strong> - Suicide & Crisis Lifeline</li>
+                <li><strong>911</strong> - Emergency Services</li>
+                <li><strong>Text HOME to 741741</strong> - Crisis Text Line</li>
+            </ul>
+        </div>
+    </noscript>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">🧠</div>
+        <div class="loading-title">Sage Healthcare AI</div>
+        <div class="loading-subtitle">Loading secure healthcare interface...</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-disclaimer">
+            <strong>Medical Disclaimer:</strong> This system provides supportive information only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
+        </div>
+    </div>
+    
+    <!-- React App Root -->
+    <div id="root"></div>
+    
+    <script>
+        // Hide loading screen when React app loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.body.classList.add('app-loaded');
+            }, 1000);
+        });
+        
+        // Error handling
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e.error);
+            // In production, you might want to send this to a logging service
+        });
+        
+        // Unhandled promise rejection handling
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // In production, you might want to send this to a logging service
+        });
+    </script>
+</body>
+</html>

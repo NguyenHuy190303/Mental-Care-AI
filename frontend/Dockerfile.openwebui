@@ -1,0 +1,43 @@
+# Dockerfile for Sage Frontend using Open WebUI
+FROM ghcr.io/open-webui/open-webui:main
+
+# Set environment variables for Sage
+ENV WEBUI_NAME="Sage"
+ENV WEBUI_URL="http://localhost:3000"
+ENV OPENAI_API_BASE_URL="http://backend:8000/api"
+ENV ENABLE_SIGNUP=true
+ENV ENABLE_LOGIN_FORM=true
+ENV DEFAULT_MODELS=""
+ENV DEFAULT_USER_ROLE="user"
+
+# Mental Care AI specific environment variables
+ENV MENTAL_HEALTH_MODE=true
+ENV SHOW_MEDICAL_DISCLAIMER=true
+ENV ENABLE_CRISIS_DETECTION=true
+ENV BACKEND_WEBSOCKET_URL="ws://backend:8000/api/ws"
+
+# Create directories for custom files
+USER root
+RUN mkdir -p /app/backend/static/css
+RUN mkdir -p /app/backend/static/js
+RUN mkdir -p /app/backend/data/config
+
+# Copy configuration
+COPY open-webui-config.yaml /app/backend/data/config/
+
+# Set permissions
+RUN chown -R 1000:1000 /app/backend/static
+RUN chown -R 1000:1000 /app/backend/data
+
+# Switch back to non-root user
+USER 1000
+
+# Expose port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Start command
+CMD ["bash", "start.sh"]

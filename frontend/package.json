@@ -1,0 +1,35 @@
+{
+  "name": "sage-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Sage Healthcare AI System",
+  "main": "index.js",
+  "scripts": {
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "start": "serve -s build",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.1",
+    "axios": "^1.6.0",
+    "socket.io-client": "^4.7.0",
+    "lucide-react": "^0.263.1",
+    "recharts": "^2.8.0",
+    "typescript": "^4.9.5",
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

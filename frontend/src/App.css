@@ -1,0 +1,373 @@
+/* Global App Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #f8fafb;
+    color: #1a365d;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Role Switcher (Development Only) */
+.role-switcher {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+}
+
+.role-switcher button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #64748b;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.role-switcher button:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.role-switcher button.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+/* App Navigation */
+.app-navigation {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-back-btn {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-back-btn:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.nav-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2b6cb0;
+}
+
+/* Main Content */
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Coming Soon Pages */
+.coming-soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 2rem;
+    background: #ffffff;
+    margin: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.coming-soon h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 1rem;
+}
+
+.coming-soon p {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    max-width: 500px;
+}
+
+.coming-soon button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.coming-soon button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Emergency Resources Page */
+.emergency-resources {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.emergency-resources h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.emergency-contacts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.emergency-contact {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.emergency-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.emergency-contact h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 1rem;
+}
+
+.emergency-number {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ef4444;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.emergency-number:hover {
+    color: #dc2626;
+    transform: scale(1.05);
+}
+
+.emergency-contact p {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.emergency-resources > button {
+    display: block;
+    margin: 0 auto;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.emergency-resources > button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Offline Indicator */
+.offline-indicator {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-navigation {
+        padding: 1rem;
+    }
+    
+    .nav-title {
+        font-size: 1.125rem;
+    }
+    
+    .emergency-resources {
+        padding: 1rem;
+    }
+    
+    .emergency-contacts {
+        grid-template-columns: 1fr;
+    }
+    
+    .coming-soon {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .coming-soon h2 {
+        font-size: 1.5rem;
+    }
+    
+    .role-switcher {
+        top: 0.5rem;
+        right: 0.5rem;
+        flex-direction: column;
+    }
+    
+    .role-switcher button {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .role-switcher,
+    .app-navigation,
+    .offline-indicator {
+        display: none;
+    }
+    
+    .app-main {
+        background: white;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .app {
+        background: #ffffff;
+    }
+    
+    .nav-back-btn {
+        border: 2px solid #000000;
+    }
+    
+    .emergency-contact {
+        border: 2px solid #000000;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .coming-soon button:hover,
+    .emergency-contact:hover {
+        transform: none;
+    }
+}
+
+/* Focus Styles for Accessibility */
+button:focus,
+a:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
