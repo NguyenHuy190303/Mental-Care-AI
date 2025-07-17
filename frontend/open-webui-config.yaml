@@ -1,0 +1,51 @@
+# Sage - Mental Health Agent Configuration for Open WebUI
+
+# Application Settings
+app:
+  name: "Sage"
+  description: "AI-Powered Mental Health Support System"
+  version: "1.0.0"
+  
+# UI Configuration
+ui:
+  theme: "mental-health"
+  show_model_selector: false
+  enable_model_filter: false
+  default_locale: "en"
+  
+# Mental Health Specific Settings
+mental_health:
+  enable_crisis_detection: true
+  show_medical_disclaimer: true
+  enable_safety_monitoring: true
+  crisis_resources:
+    - name: "988 Suicide & Crisis Lifeline"
+      number: "988"
+      description: "24/7 crisis support"
+    - name: "Crisis Text Line"
+      number: "741741"
+      description: "Text HOME for support"
+    - name: "Emergency Services"
+      number: "911"
+      description: "Immediate emergency help"
+
+# Features
+features:
+  enable_signup: true
+  enable_login_form: true
+  enable_message_rating: true
+  enable_community_sharing: false
+  enable_message_deletion: true
+  enable_chat_deletion: true
+  
+# Safety Settings
+safety:
+  content_filtering: true
+  prompt_injection_protection: true
+  audit_logging: true
+  
+# Backend Integration
+backend:
+  api_base_url: "http://backend:8000/api"
+  websocket_url: "ws://backend:8000/api/ws"
+  health_check_url: "http://backend:8000/api/health"
