@@ -1,0 +1,454 @@
+# Kubernetes Security Policies for Mental Health Agent
+# Implements Pod Security Standards, Network Policies, and RBAC
+
+---
+# Pod Security Standards
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mental-health-agent
+  labels:
+    name: mental-health-agent
+    environment: production
+    app: mental-health-agent
+    # Pod Security Standards
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    # Security scanning
+    security.scan/enabled: "true"
+
+---
+# Service Account for Backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mental-health-backend-sa
+  namespace: mental-health-agent
+  labels:
+    app: mental-health-backend
+automountServiceAccountToken: false  # Disable automatic token mounting
+
+---
+# Service Account for Database
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mental-health-database-sa
+  namespace: mental-health-agent
+  labels:
+    app: mental-health-database
+automountServiceAccountToken: false
+
+---
+# RBAC Role for Backend Service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: mental-health-backend-role
+  namespace: mental-health-agent
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+  resourceNames: ["mental-health-agent-secrets"]  # Specific secret only
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list"]
+
+---
+# RBAC RoleBinding for Backend
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: mental-health-backend-binding
+  namespace: mental-health-agent
+subjects:
+- kind: ServiceAccount
+  name: mental-health-backend-sa
+  namespace: mental-health-agent
+roleRef:
+  kind: Role
+  name: mental-health-backend-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Network Policy - Default Deny All
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: mental-health-agent
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Network Policy - Backend to Database
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-to-database
+  namespace: mental-health-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: mental-health-backend
+  policyTypes:
+  - Egress
+  egress:
+  # Allow connection to PostgreSQL
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Allow connection to Redis
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  # Allow connection to ChromaDB
+  - to:
+    - podSelector:
+        matchLabels:
+          app: chromadb
+    ports:
+    - protocol: TCP
+      port: 8000
+  # Allow DNS resolution
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow HTTPS for external APIs (OpenAI, etc.)
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+
+---
+# Network Policy - Database Ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-ingress
+  namespace: mental-health-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  # Only allow backend to connect to database
+  - from:
+    - podSelector:
+        matchLabels:
+          app: mental-health-backend
+    ports:
+    - protocol: TCP
+      port: 5432
+
+---
+# Network Policy - Redis Ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-ingress
+  namespace: mental-health-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+  - Ingress
+  ingress:
+  # Only allow backend to connect to Redis
+  - from:
+    - podSelector:
+        matchLabels:
+          app: mental-health-backend
+    ports:
+    - protocol: TCP
+      port: 6379
+
+---
+# Network Policy - Load Balancer Ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: load-balancer-ingress
+  namespace: mental-health-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-load-balancer
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow external traffic
+  - from: []
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+  egress:
+  # Allow connection to backend
+  - to:
+    - podSelector:
+        matchLabels:
+          app: mental-health-backend
+    ports:
+    - protocol: TCP
+      port: 8000
+  # Allow DNS resolution
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+
+---
+# Pod Security Policy (if PSP is enabled)
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: mental-health-agent-psp
+  namespace: mental-health-agent
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'MustRunAsNonRoot'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  readOnlyRootFilesystem: true
+
+---
+# Security Context Constraints (OpenShift)
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: mental-health-agent-scc
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+allowedCapabilities: []
+defaultAddCapabilities: []
+requiredDropCapabilities:
+- ALL
+allowedFlexVolumes: []
+fsGroup:
+  type: MustRunAs
+  ranges:
+  - min: 1
+    max: 65535
+readOnlyRootFilesystem: true
+runAsUser:
+  type: MustRunAsNonRoot
+supplementalGroups:
+  type: MustRunAs
+  ranges:
+  - min: 1
+    max: 65535
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+
+---
+# Admission Controller - OPA Gatekeeper Policy
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredsecuritycontext
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredSecurityContext
+      validation:
+        openAPIV3Schema:
+          type: object
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredsecuritycontext
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.runAsNonRoot
+          msg := "Container must run as non-root user"
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.readOnlyRootFilesystem
+          msg := "Container must have read-only root filesystem"
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          container.securityContext.allowPrivilegeEscalation
+          msg := "Container must not allow privilege escalation"
+        }
+
+---
+# Gatekeeper Constraint
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredSecurityContext
+metadata:
+  name: must-have-security-context
+spec:
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    namespaces: ["mental-health-agent"]
+
+---
+# Resource Quota with Security Limits
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mental-health-agent-security-quota
+  namespace: mental-health-agent
+spec:
+  hard:
+    # Compute resources
+    requests.cpu: "20"
+    requests.memory: 40Gi
+    limits.cpu: "40"
+    limits.memory: 80Gi
+    
+    # Storage
+    persistentvolumeclaims: "10"
+    requests.storage: 500Gi
+    
+    # Network
+    services: "20"
+    services.loadbalancers: "2"
+    
+    # Security
+    secrets: "20"
+    configmaps: "20"
+    
+    # Pods
+    pods: "50"
+    
+    # Prevent privileged containers
+    count/pods.privileged: "0"
+
+---
+# Limit Range for Security
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mental-health-agent-security-limits
+  namespace: mental-health-agent
+spec:
+  limits:
+  - default:
+      cpu: "2"
+      memory: "4Gi"
+      ephemeral-storage: "10Gi"
+    defaultRequest:
+      cpu: "500m"
+      memory: "1Gi"
+      ephemeral-storage: "1Gi"
+    max:
+      cpu: "8"
+      memory: "16Gi"
+      ephemeral-storage: "50Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+      ephemeral-storage: "100Mi"
+    type: Container
+  - max:
+      storage: "100Gi"
+    min:
+      storage: "1Gi"
+    type: PersistentVolumeClaim
+
+---
+# Image Security Policy
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: image-security-policy
+  namespace: mental-health-agent
+data:
+  policy.yaml: |
+    # Image security policy
+    images:
+      # Only allow images from trusted registries
+      allowed_registries:
+        - "docker.io/library"
+        - "gcr.io/distroless"
+        - "registry.access.redhat.com/ubi8"
+        - "mental-health-agent-registry.com"
+      
+      # Require image scanning
+      require_scan: true
+      max_critical_vulnerabilities: 0
+      max_high_vulnerabilities: 5
+      
+      # Require signed images
+      require_signature: true
+      trusted_signers:
+        - "mental-health-agent-team"
+      
+      # Block latest tags in production
+      block_latest_tag: true
+      
+      # Require specific base images
+      allowed_base_images:
+        - "distroless"
+        - "alpine"
+        - "ubi8-minimal"

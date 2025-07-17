@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mental-health-agent
+  labels:
+    name: mental-health-agent
+    environment: production
+    app: mental-health-agent
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mental-health-agent-quota
+  namespace: mental-health-agent
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: 40Gi
+    limits.cpu: "40"
+    limits.memory: 80Gi
+    persistentvolumeclaims: "10"
+    services: "20"
+    secrets: "20"
+    configmaps: "20"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mental-health-agent-limits
+  namespace: mental-health-agent
+spec:
+  limits:
+  - default:
+      cpu: "2"
+      memory: "4Gi"
+    defaultRequest:
+      cpu: "500m"
+      memory: "1Gi"
+    type: Container
+  - max:
+      cpu: "8"
+      memory: "16Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container

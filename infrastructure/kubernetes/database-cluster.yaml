@@ -1,0 +1,432 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: mental-health-agent
+data:
+  postgresql.conf: |
+    # PostgreSQL configuration for high availability
+    listen_addresses = '*'
+    port = 5432
+    max_connections = 200
+    shared_buffers = 256MB
+    effective_cache_size = 1GB
+    maintenance_work_mem = 64MB
+    checkpoint_completion_target = 0.9
+    wal_buffers = 16MB
+    default_statistics_target = 100
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    work_mem = 4MB
+    min_wal_size = 1GB
+    max_wal_size = 4GB
+    
+    # Logging
+    log_destination = 'stderr'
+    logging_collector = on
+    log_directory = 'pg_log'
+    log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+    log_statement = 'all'
+    log_min_duration_statement = 1000
+    
+    # Replication settings
+    wal_level = replica
+    max_wal_senders = 3
+    max_replication_slots = 3
+    hot_standby = on
+    hot_standby_feedback = on
+    
+  pg_hba.conf: |
+    # PostgreSQL Client Authentication Configuration
+    local   all             all                                     trust
+    host    all             all             127.0.0.1/32            md5
+    host    all             all             ::1/128                 md5
+    host    all             all             10.0.0.0/8              md5
+    host    replication     all             10.0.0.0/8              md5
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-primary
+  namespace: mental-health-agent
+  labels:
+    app: postgres
+    role: primary
+spec:
+  serviceName: postgres-primary-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      role: primary
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: primary
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+          name: postgres
+        
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: POSTGRES_PASSWORD
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        
+        resources:
+          requests:
+            cpu: 1
+            memory: 2Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+        
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-config
+          mountPath: /etc/postgresql/postgresql.conf
+          subPath: postgresql.conf
+        - name: postgres-config
+          mountPath: /etc/postgresql/pg_hba.conf
+          subPath: pg_hba.conf
+        
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      
+      volumes:
+      - name: postgres-config
+        configMap:
+          name: postgres-config
+      
+      securityContext:
+        fsGroup: 999
+  
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "fast-ssd"
+      resources:
+        requests:
+          storage: 100Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: mental-health-agent
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+    name: postgres
+  selector:
+    app: postgres
+    role: primary
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-primary-service
+  namespace: mental-health-agent
+  labels:
+    app: postgres
+    role: primary
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+    name: postgres
+  selector:
+    app: postgres
+    role: primary
+
+---
+# Redis Cluster for Caching and Session Storage
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: mental-health-agent
+  labels:
+    app: redis
+spec:
+  serviceName: redis-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+          name: redis
+        
+        command:
+        - redis-server
+        - /etc/redis/redis.conf
+        
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: REDIS_PASSWORD
+        
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1
+            memory: 2Gi
+        
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+        - name: redis-config
+          mountPath: /etc/redis/redis.conf
+          subPath: redis.conf
+        
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+      
+      volumes:
+      - name: redis-config
+        configMap:
+          name: redis-config
+  
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "fast-ssd"
+      resources:
+        requests:
+          storage: 10Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: mental-health-agent
+data:
+  redis.conf: |
+    # Redis configuration for production
+    bind 0.0.0.0
+    port 6379
+    requirepass ${REDIS_PASSWORD}
+    
+    # Memory management
+    maxmemory 1gb
+    maxmemory-policy allkeys-lru
+    
+    # Persistence
+    save 900 1
+    save 300 10
+    save 60 10000
+    
+    # Logging
+    loglevel notice
+    logfile ""
+    
+    # Security
+    protected-mode yes
+    
+    # Performance
+    tcp-keepalive 300
+    timeout 0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: mental-health-agent
+  labels:
+    app: redis
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - port: 6379
+    targetPort: 6379
+    protocol: TCP
+    name: redis
+  selector:
+    app: redis
+
+---
+# ChromaDB for Vector Database
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chromadb
+  namespace: mental-health-agent
+  labels:
+    app: chromadb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chromadb
+  template:
+    metadata:
+      labels:
+        app: chromadb
+    spec:
+      containers:
+      - name: chromadb
+        image: chromadb/chroma:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        
+        env:
+        - name: CHROMA_SERVER_HOST
+          value: "0.0.0.0"
+        - name: CHROMA_SERVER_HTTP_PORT
+          value: "8000"
+        - name: PERSIST_DIRECTORY
+          value: "/chroma/data"
+        
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2
+            memory: 4Gi
+        
+        volumeMounts:
+        - name: chromadb-storage
+          mountPath: /chroma/data
+        
+        livenessProbe:
+          httpGet:
+            path: /api/v1/heartbeat
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /api/v1/heartbeat
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      
+      volumes:
+      - name: chromadb-storage
+        persistentVolumeClaim:
+          claimName: chromadb-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chromadb-pvc
+  namespace: mental-health-agent
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: "fast-ssd"
+  resources:
+    requests:
+      storage: 50Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chromadb-service
+  namespace: mental-health-agent
+  labels:
+    app: chromadb
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app: chromadb

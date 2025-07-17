@@ -1,0 +1,299 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mental-health-backend
+  namespace: mental-health-agent
+  labels:
+    app: mental-health-backend
+    tier: backend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: mental-health-backend
+  template:
+    metadata:
+      labels:
+        app: mental-health-backend
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: mental-health-agent/backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 9090
+          name: metrics
+        
+        env:
+        # Configuration from ConfigMap
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: ENVIRONMENT
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: DEBUG
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: LOG_LEVEL
+        - name: API_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: API_HOST
+        - name: API_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: API_PORT
+        
+        # Database Configuration
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_HOST
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_PORT
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: POSTGRES_USER
+        
+        # Redis Configuration
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: REDIS_PORT
+        
+        # ChromaDB Configuration
+        - name: CHROMADB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: CHROMADB_HOST
+        - name: CHROMADB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mental-health-agent-config
+              key: CHROMADB_PORT
+        
+        # Secrets
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: OPENAI_API_KEY
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: POSTGRES_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: REDIS_PASSWORD
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: JWT_SECRET_KEY
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: ENCRYPTION_KEY
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: mental-health-agent-secrets
+              key: DATABASE_URL
+        
+        # Resource limits and requests
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2
+            memory: 4Gi
+        
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /api/monitoring/health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /api/monitoring/ready
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Startup probe for slow-starting containers
+        startupProbe:
+          httpGet:
+            path: /api/monitoring/health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+        
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        
+        # Volume mounts
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: logs
+          mountPath: /app/logs
+      
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: logs
+        emptyDir: {}
+      
+      # Pod security context
+      securityContext:
+        fsGroup: 1000
+      
+      # Node selection and affinity
+      nodeSelector:
+        kubernetes.io/os: linux
+      
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - mental-health-backend
+              topologyKey: kubernetes.io/hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mental-health-backend-service
+  namespace: mental-health-agent
+  labels:
+    app: mental-health-backend
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: metrics
+  selector:
+    app: mental-health-backend
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mental-health-backend-hpa
+  namespace: mental-health-agent
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mental-health-backend
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mental-health-backend-pdb
+  namespace: mental-health-agent
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: mental-health-backend
