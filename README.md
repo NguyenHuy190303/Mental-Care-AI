@@ -98,7 +98,7 @@ The quick setup script will:
 ### 🔧 Option 2: Manual Setup
 
 ```bash
-git clone https://github.com/NguyenHuy190303/Sage.git
+git clone https://github.com/NguyenHuy190303/Salus-Analytica.git
 cd Sage
 
 # Copy and configure environment
