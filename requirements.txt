@@ -1,0 +1,53 @@
+# Core Framework Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+
+# AI/ML Dependencies
+openai>=1.14.0
+langchain>=0.1.0
+langchain-openai>=0.0.5
+chromadb==0.4.18
+sentence-transformers==2.2.2
+
+# Database Dependencies
+psycopg2-binary==2.9.9
+redis==5.0.1
+sqlalchemy==2.0.23
+alembic==1.13.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+PyJWT==2.8.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+cryptography>=43.0.0
+
+# Multimodal Processing
+Pillow>=10.0.0
+opencv-python>=4.8.0
+whisper>=1.1.0
+
+# Web & API
+websockets>=12.0
+httpx>=0.25.0
+aiofiles>=23.0.0
+
+# Monitoring & Logging
+structlog>=23.0.0
+prometheus-client>=0.19.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.7.0
+
+# Additional dependencies for enhanced functionality
+google-generativeai>=0.3.0
+anthropic>=0.7.0
+tiktoken>=0.5.0
+
