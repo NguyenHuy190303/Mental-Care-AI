@@ -26,7 +26,7 @@ Sage is a comprehensive healthcare support system built on a **Single-Threaded L
 - **Backend**: FastAPI + LangChain + ChromaDB
 - **Frontend**: Open WebUI (planned)
 - **Database**: PostgreSQL + ChromaDB + Redis
-- **AI Models**: Google Gemini 1.5 Pro (default), OpenAI GPT-4o-mini with intelligent model routing
+- **AI Models**: Google Gemini 2.5 Pro (default), OpenAI GPT-4o-mini with intelligent model routing
 - **Deployment**: Docker + GitHub Actions + Vercel/Render
 
 ### System Architecture
@@ -39,7 +39,7 @@ User Input → Open WebUI → FastAPI Backend → Linear Agent → [Sequential T
 Sage supports multiple advanced AI models with intelligent routing for optimal healthcare responses:
 
 #### Supported Models
-- **Google Gemini 1.5 Pro**: Default primary model for healthcare applications
+- **Google Gemini 2.5 Pro**: Default primary model for healthcare applications
   - High safety settings optimized for medical content
   - Advanced reasoning capabilities for complex medical queries
   - Multimodal support for text, image, and voice processing
